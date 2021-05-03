@@ -1,0 +1,12 @@
+js/
+css/
+examples/
+test/
+gulpfile.js
+package.json
+package-lock.json
+demo.html
+LICENSE
+CONTRIBUTING.md
+README.md
+
