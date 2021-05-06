@@ -4,11 +4,11 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>reveal.js</title>
+		<title>Motores de JavaScript</title>
 
 		<link rel="stylesheet" href="dist/reset.css">
 		<link rel="stylesheet" href="dist/reveal.css">
-		<link rel="stylesheet" href="dist/theme/black.css" id="theme">
+		<link rel="stylesheet" href="dist/theme/blood	.css" id="theme">
 
 		<!-- Theme used for syntax highlighted code -->
 		<link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme">
@@ -18,22 +18,58 @@
 			<div class="slides">
 				<section>
 					<h3>Motores de JavaScript</h3>
-					<img width="400" src="dist/static/JavaScript-logo.png">
-					<h4>Lisandro Marchionni</h4>
+					<img class="r-stretch" src="dist/static/JavaScript-logo.png">
+					<h4>Lisandro Marchionni - 7º 3ª</h4>
 				</section>
 				<section>
 					<p>
 						JavaScript ha evolucionado de ser solo un lenguaje
 						web a ser un lenguaje multipropósito, utilizado en tanto en <code>Front-end</code>,
-						<code>Bpack-end</code> y móviles.
+						<code>Back-end</code> y móviles.
 					</p>
 					<p>
 						Por eso, al igual que el lenguaje, los diferentes motores fueron evolucionando 
 						desde la creación del primer motor <code>SpiderMonkey</code> en 1995.
 					</p>
 				</section>
+				<section data-auto-animate>
+					<h4>Los 3 motores más utilizados son</h4>
+					<p><a href="https://v8.dev/" target="_blank">V8 Engine</a> utilizado por</b></p>
+					<ul>
+						<li>Chrome</li>
+						<li>Navegadores basados en Chromium</li>
+						<li>NodeJS</li>
+					</ul>
+				</section>
+				<section data-auto-animate>
+					<h4>Los 3 motores más utilizados son</h4>
+					<p><a href="https://v8.dev/" target="_blank">V8 Engine</a> utilizado por Chrome</b></p>
+					<p><a href="https://spidermonkey.dev/" target="_blank">SpiderMonkey</a> utilizado por Firefox</p>
+				</section>
+				<section data-auto-animate>
+					<h4>Los 3 motores más utilizados son</h4>
+					<p><a href="https://v8.dev/" target="_blank">V8 Engine</a> utilizado por Chrome</b></p>
+					<p><a href="https://spidermonkey.dev/" target="_blank">SpiderMonkey</a> utilizado por Firefox</p>
+					<p><a href="https://developer.apple.com/documentation/javascriptcore" target="_blank">JavaScriptCore &#10088;Nitro&#10089;</a> utilizado por Safari</p>
+				</section>
+				<section data-auto-animate>
+					<p>
+						La mayoría de los motores modernos emplean un método llamado <a>Just-In-Time Compilation</a>
+						así como el hecho de estar escritos en <a>C++</a> &#10088;V8&#10089; o <a>Rust</a> &#10088;En combinación con C++, SpiderMonkey&#10089;.
+					</p>
+					<p>
+						Con JIT Compilation, el código fuente se "compila" a bytecode, y el bytecode es el que actualmente se ejecuta, permitiendo
+						una mejora en la velocidad de ejecución.
+					</p>
+				</section>
 				<section>
-					Diferentes navegadores utilizan diferentes 
+					<img src="./dist/static/v8-graph.png" >
+				</section>
+				<section>
+					<h5>Fuentes:</h5>
+					<a href="https://blog.bitsrc.io/javascript-engines-an-overview-2162bffa1187" target="_blank">JavaScript Engines: An Overview</a> <br>
+					<a href="https://blog.bitsrc.io/javascript-engines-an-overview-2162bffa1187" target="_blank">The V8 JavaScript Engine</a> <br>
+					<a href="https://es.wikipedia.org/wiki/Compilaci%C3%B3n_en_tiempo_de_ejecuci%C3%B3n" target="_blank">Compilación en tiempo de ejecución</a>
 				</section>
 			</div>
 		</div>
@@ -48,10 +84,11 @@
 			// - https://revealjs.com/config/
 			Reveal.initialize({
 				hash: true,
-
+				slideNumber: true,
 				// Learn about plugins: https://revealjs.com/plugins/
 				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
 			});
 		</script>
 	</body>
 </html>
+
