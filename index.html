@@ -52,24 +52,106 @@
 					<p><a href="https://spidermonkey.dev/" target="_blank">SpiderMonkey</a> utilizado por Firefox</p>
 					<p><a href="https://developer.apple.com/documentation/javascriptcore" target="_blank">JavaScriptCore &#10088;Nitro&#10089;</a> utilizado por Safari</p>
 				</section>
-				<section data-auto-animate>
+				<section>
 					<p>
-						La mayoría de los motores modernos emplean un método llamado <a>Just-In-Time Compilation</a>
-						así como el hecho de estar escritos en <a>C++</a> &#10088;V8&#10089; o <a>Rust</a> &#10088;En combinación con C++, SpiderMonkey&#10089;.
-					</p>
-					<p>
-						Con JIT Compilation, el código fuente se "compila" a bytecode, y el bytecode es el que actualmente se ejecuta, permitiendo
-						una mejora en la velocidad de ejecución.
+						Los motores utilizan diferentes técnicas para realizar optimización a la hora 
+						de la ejecución, como la <a href="https://es.wikipedia.org/wiki/Compilaci%C3%B3n_en_tiempo_de_ejecuci%C3%B3n">Just-In-Time Compilation</a>,
+						el Memory Heap y el Call Stack.
 					</p>
 				</section>
 				<section>
-					<img src="./dist/static/v8-graph.png" >
+					<p>El diagrama de ejecución de V8</p>
+					<img src="./dist/static/v8-graph.png" class="r-stretch">
 				</section>
+				<section>
+					<p>
+						Aunque diferentes motores de JavaScript lo hacen de forma diferente, 
+						la Just-In-Time Compilation básicamente es el análisis del código mientras
+						es ejecutado y compilado, y hace notas sobre cuantas veces se 
+						ejecuta cierto código y que tipos de datos son usados.
+					</p>
+				</section>
+				<section>
+					<p>
+						Cuando una porción de código es utilizado pocas veces, se considera que
+						esa porción del códido es cálida -o worm- y cuando se utiliza muchas veces
+						se la considerara caliente -o hot.
+					</p>
+					<img src="dist/static/JIT.png" class="r-stretch">
+				</section>
+				<section>
+					<p>
+						Este análisis permite elegir compilar únicamente el código que más
+						usa, el codigo hot, mientras que el código ejecutado en menos ocasiones
+						es interpretado.
+					</p>
+					<p>
+						JIT Compilation no sirve mucho en la optimización para programas de corta
+						duración, pero en aplicaciones web modernas donde la ejecución del código
+						puede durar horas, esta optimización termina siendo notable.
+					</p>
+				</section>
+				<section>
+					<h3>El Call Stack</h3>
+					<p>
+						Cuando se ejecuta un programa en el navegador, las funciones que se van ejecutando
+						se van almacenando en el Call Stack. Esto permite al navegador seguir el paso
+						del programa, y cuando se llama a una función <code>B()</code> dentro de <code>A()</code>, 
+						no olvidar donde quedamos en <code>A()</code> despues de ejecutar dicha función <code>B()</code>.
+					</p>
+				</section>
+				<section>
+					<p>Un ejemplo pŕactico:</p>
+					<pre><code data-trim data-noescape>
+							function DrawPoints() {
+								...
+							}
+
+							function setup() {
+								DrawPoints();
+							}
+
+							setup();
+						</code></pre>
+						<p>Este código, aunque escueto, sirve para ejemplificar la pila de ejecución.</p>
+				</section>
+				<section>
+					<p>
+						En una primera instancia, cuando se ejecuta el programa por primera vez,
+						podemos ver en la pestaña Call Stack que se llama a la función anonymous. 
+					</p>
+					<img src="dist/static/cs-1.png" >
+					<p>
+						Esta función es el navegador mismo que llama ejecuta el código "suelto"
+						en el archivo JS.
+					</p>
+				</section>
+				<section>
+					<p>
+						Como podemos observar, la primera función a ejecutarse es <code>setup()</code>,
+						y el cursor se ubica dentro de la función.
+					</p>
+					<img src="./dist/static/cs-2.png" >
+					<p>
+						A la derecha, se puede observar como se agrego <code>setup()</code> por encima de 
+						de la función <code>anonymous</code>. A nivel interno, también se guarda en qué linea
+						se llamó a la función <code>setup()</code>.
+					</p>
+				</section>	
+				<section>
+					<p></p>
+					<img src="dist/static/cs-3.png">
+				</section>
+				
+				
+				
+				
 				<section>
 					<h5>Fuentes:</h5>
 					<a href="https://blog.bitsrc.io/javascript-engines-an-overview-2162bffa1187" target="_blank">JavaScript Engines: An Overview</a> <br>
 					<a href="https://blog.bitsrc.io/javascript-engines-an-overview-2162bffa1187" target="_blank">The V8 JavaScript Engine</a> <br>
 					<a href="https://es.wikipedia.org/wiki/Compilaci%C3%B3n_en_tiempo_de_ejecuci%C3%B3n" target="_blank">Compilación en tiempo de ejecución</a>
+					<a href="https://hacks.mozilla.org/2017/02/a-crash-course-in-just-in-time-jit-compilers/">A crash course in just-in-time (JIT) compilers</a>
 				</section>
 			</div>
 		</div>
@@ -86,7 +168,7 @@
 				hash: true,
 				slideNumber: true,
 				// Learn about plugins: https://revealjs.com/plugins/
-				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+				plugins: [ RevealHighlight ]
 			});
 		</script>
 	</body>
