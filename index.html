@@ -122,7 +122,7 @@
 					</p>
 					<img src="dist/static/cs-1.png" >
 					<p>
-						Esta función es el navegador mismo que llama ejecuta el código "suelto"
+						Esta función es el navegador mismo que ejecuta el código "suelto"
 						en el archivo JS.
 					</p>
 				</section>
@@ -139,19 +139,211 @@
 					</p>
 				</section>	
 				<section>
-					<p></p>
-					<img src="dist/static/cs-3.png">
+					<p>
+						Al igual que cuando se ejecutó <code>setup()</code>, cuando entramos
+						en la función <code>DrawPoints()</code>, se agrega el nombre de la función arriba de 
+						<code>setup()</code>.
+					</p>
+					<img src="dist/static/cs-3.png" class="r-stretch">
+					<p>
+						Esto se puede repetir hasta un cierto límite, que varía según el motor de JavaScript, 
+						así como las variables de entorno en el caso de NodeJS.
+					</p>
 				</section>
-				
-				
-				
-				
+				<section>
+					<p>
+						A medida que se termina de ejecutar la función que esta en la cima de pila, 
+						se la irá retirando, y se continuará por donde diga el elemento inferior en la pila.
+					</p>
+					<img src="dist/static/lifo.png" class="r-stretch">
+				</section>
+				<section>
+					<h3>El Memory Heap</h3>
+					<p>
+						El memory heap es un lugar de almacenamiento para las variables globales, que además soporta
+						locación de memoria dinámica. Estructuralmente, se diría que es como un "espacio flotante" en la memoria.
+					</p>
+					<p>
+						El único momento en el que se elimina el heap es cuando se libera ese espacio de 
+						la memoria o se termina la ejecución del programa.
+					</p>
+				</section>
+				<section>
+					<p>
+						Un gran detalle a tener en cuenta es el <em>memory leaking</em>. Es cuando en el medio de la
+						ejecución se pierden los punteros -direcciones hacia la memoria- de las variables almacenadas en
+						el heap.
+					</p>
+					<p>
+						Se podría decir que cuando ocurre el memory leaking, perdes acceso a las variables, provocando
+						que queden dando vuelta en memoria hasta que el programa finalize y el sistema operativo las
+						remueva manualmente.
+					</p>
+				</section>
+				<section>
+					<p style="font-size: 1.6rem;">
+						Como podemos ver en el ejemplo a continuación, una característica del Heap es que cuando
+						una variable hace referencia a otra -como en la última línea-, no se copia los datos y se crea otra
+						variable, si no que utiliza el puntero de <code>person</code> y lo comparte con <code>newPerson</code>.
+					</p>
+					<img src="dist/static/stack-heap-pointers.png" class="r-stretch">
+				</section>
+				<section>
+					<h3>Los hilos de ejecución</h3>
+					<p>
+						Después de conocer el Call Stack, podemos sacar la conclusión que se puede
+						ejecutar una sola función a la vez. Esto es ya que JavaScript en el navegador
+						es <b>monohilo</b>. En los navegadores modernos, se asigna solamente un hilo de ejecución a cada
+						pestaña del navegador.
+					</p>
+					<p>
+						También cabe mencionar que por esta misma característica, si en alguna parte de la ejecución
+						el programa se congela, el resto de la interacción con JavaScript de la página será <b>bloqueado</b>.
+					</p>
+				</section>
+				<section>
+					<h4>¿Se pueden utilizar más de un hilo?</h4>
+					<p>
+						Si... y no. Existen nuevas tecnologías como <a href="https://developer.mozilla.org/es/docs/Web/API/Web_Workers_API/Using_web_workers" target="_blank">WebWorker</a>
+						que permiten la ejecución de JavaScript en otro hilo, pero es como ejecutar otro programa
+						que también es monohilo.
+					</p>
+					<p>
+						Existen los <em>Dedicated Workers</em> que son instanciados por el proceso principal y solo pueden comunicarse con él,
+						y los <em>Shared Workers</em> que son accesibles por múltiples scripts que se original del proceso principal -otras pestañas, iframes, etc.
+					</p>
+				</section>
+				<section>
+					<h3>¿Qué son los Callbacks?</h3>
+					<p>
+						Según Mozilla Developers Network, 
+						<blockquote cite="https://developer.mozilla.org/es/docs/Glossary/Callback_function">
+							una función de callback es una función que se pasa a otra función como un argumento, 
+							que luego se invoca dentro de la función externa para completar algún tipo de 
+							rutina o acción.
+						</blockquote>
+					</p>
+				</section>
+				<section>
+					<h5>¿Qué son los callbacks?</h5>
+					<p>
+						Cuando pasamos una función como argumento, podemos observar que unicamente pasamos la definición
+						de la misma. Esto nos permite despues llamar a esa función desde el nombre del parámetro.
+					</p>
+					<pre><code data-trim data-noescape>
+						function haceAlgo(callback) {
+						  callback()
+						}
+
+						function decirHola() {
+						  console.log('hola');
+						}
+
+						hacerAlgo(decirHola);
+					</code></pre>
+				</section>
+				<section>
+					<h5>Ejecución asíncrona con callbacks</h5>
+					<p style="font-size: 1.6rem;">Al ser monohilo, la ejecución de JavaScript es síncrona: se ejecuta una orden atras de otra.</p>
+					<p style="font-size: 1.6rem;">
+						Gracias a los callbacks, podemos crear cierto tipo de asíncronismo gracias a la 
+						función <code>setTimeout</code>. Esta permite la ejecución de cierto código <em>mínimo</em> X milisegundos después.
+					</p>
+					<pre><code data-trim data-noescape>
+						setTimeout(function(){
+							console.log("Esto debería aparecer primero");
+						}, 50);
+						console.log("Sorpresa!");
+						
+						// Sorpresa!
+						// Esto debería aparecer primero
+					</code></pre>
+					<p style="font-size: 1.6rem;">
+						A tal fin, dispara un timer en un contexto externo y registra el callback para ser 
+						ejecutado una vez que el <code>timer</code> termine. 
+					</p>
+				</section>
+				<section>
+					<p>
+						Un callback que se añade al loop de eventos debe esperar su turno. Si por ejemplo el código
+						anterior se ejecutar en 0ms en vez de 50ms, de igual forma no se ejecutaría de forma
+						instantánea. Debe esperar por lo menos el primer tick, y que se libere el callstack.
+					</p>
+				</section>
+				<section>
+					<h3>¿Y qué sobre las Promesas?</h3>
+					<p style="font-size: 1.8rem;">
+						Las promesas son una nueva forma de trabajar con JavaScript asíncrono.
+						El valor retornado por una consulta podría estar disponible <em>ahora</em> o en
+						a <em>futuro</em>.
+					</p> 
+					<p style="font-size: 1.8rem;">
+						Cuando llamamos a una promesa, creamos un objeto que garantiza que ese proceso terminará.
+						Luego de esto, nosotros podemos pasarle dos parámetros callbacks por si la promesa resulto exitosa
+						o fue rechazada.
+						Un ejemplo puede ser:
+						<pre><code data-trim data-noescape>
+							const currentURL = document.URL.toString();
+							const promise = fetch(currentURL);
+							promise.then(result => console.log(result),
+							e => console.log(`Error capturado:  ${e}`));
+						</code></pre>
+					</p>
+				</section>
+				<section>
+					<p>
+						Una característica muy particular es que se pueden concatenar promesas, haciendo que
+						la sintaxis sea aún más legible.
+					</p>
+					<pre><code data-trim data-noescape>
+						fetch(document.URL.toString())
+						.then(result => {
+							console.log(result);
+							return "Primer Then";
+						},
+							e => console.log(`Error capturado:  ${e}`))
+						.then(result => console.log(`Segundo Then despues de ${result}: La página ya ha debido ser mostrada`),
+							e => console.log(`Error capturado:  ${e}`));
+					</code></pre>
+				</section>
+				<section>
+					<p style="font-size: 1.8rem;">
+						Para finalizar, cabe mencionar la existencia de un nuevo estandar para trabajar de
+						forma asíncrona: funciones <b>async / await</b>.
+					</p>
+					<p style="font-size: 1.8rem;">
+						Aportan no solo una mayor compresión de sintaxis, sino también una forma mucho más fácil 
+						de crear promesas si necesidad de complicarnos.
+					</p>
+					<pre><code data-trim data-noescape>
+					async function getProcessedData(url) {
+						let v;
+						try {
+							v = await downloadData(url);
+						} catch(e) {
+							v = await downloadFallbackData(url);
+						}
+						return processDataInWorker(v);
+					}
+					</code></pre>
+					<p style="font-size: 1rem;">
+						*Esta sintaxis puede no estar soportada en su totalidad por los motores de JavaScript, 
+						es una especificación del 2017.
+					</p>
+				</section>
+
 				<section>
 					<h5>Fuentes:</h5>
 					<a href="https://blog.bitsrc.io/javascript-engines-an-overview-2162bffa1187" target="_blank">JavaScript Engines: An Overview</a> <br>
-					<a href="https://blog.bitsrc.io/javascript-engines-an-overview-2162bffa1187" target="_blank">The V8 JavaScript Engine</a> <br>
-					<a href="https://es.wikipedia.org/wiki/Compilaci%C3%B3n_en_tiempo_de_ejecuci%C3%B3n" target="_blank">Compilación en tiempo de ejecución</a>
-					<a href="https://hacks.mozilla.org/2017/02/a-crash-course-in-just-in-time-jit-compilers/">A crash course in just-in-time (JIT) compilers</a>
+					<a href="https://v8.dev/" target="_blank">The V8 JavaScript Engine</a> <br>
+					<a href="https://es.wikipedia.org/wiki/Compilaci%C3%B3n_en_tiempo_de_ejecuci%C3%B3n" target="_blank">Compilación en tiempo de ejecución</a><br>
+					<a href="https://hacks.mozilla.org/2017/02/a-crash-course-in-just-in-time-jit-compilers/" target="_blank">A crash course in just-in-time (JIT) compilers</a><br>
+					<a href="https://www.guru99.com/stack-vs-heap.html#1" target="_blank">Stack vs Heap</a><br>
+					<a href="https://stackoverflow.com/questions/2308751/what-is-a-memory-heap" target="_blank">What is a Memory Heap</a><br>
+					<a href="https://medium.com/blog-apside/multithreading-con-javascript-web-workers-eb426549440c" target="_blank">Multithreading con Javascript: Web Workers.</a><br>
+					<a href="https://anamartinezaguilar.medium.com/callbacks-en-javascript-8deeca9824b4" target="_blank">Callback en JavaScript</a><br>
+					<a href="https://lemoncode.net/lemoncode-blog/2018/1/29/javascript-asincrono" target="_blank">JavaScript Asíncrono, la guía definitiva.</a> 
+					<a href="https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Statements/async_function" target="_blank">Async / Await</a>
 				</section>
 			</div>
 		</div>
